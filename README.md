@@ -35,6 +35,15 @@ Este proyecto está construido con un stack moderno y eficiente diseñado para b
 
 ---
 
+## 🚀 Demo en CubePath
+
+Este proyecto está actualmente desplegado como **demo funcional** en un servidor CubePath, accesible mediante HTTPS y con configuración de Nginx + Certbot.  
+Puedes probarlo en línea en:
+
+👉 [https://vps23540.cubepath.net](https://vps23540.cubepath.net)
+
+---
+
 ## 🧩 Módulos Principales (El Sidebar)
 
 La plataforma está dividida en diferentes módulos accesibles desde la barra lateral (Sidebar), cada uno con un propósito específico:
