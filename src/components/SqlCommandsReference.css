@@ -1,0 +1,430 @@
+.sql-commands-container {
+    padding: 24px 32px;
+    height: 100%;
+    overflow-y: auto;
+    color: var(--text);
+    animation: fadeIn 0.4s ease;
+}
+
+.commands-header {
+    margin-bottom: 32px;
+    max-width: 800px;
+}
+
+.commands-header h2 {
+    font-size: 2rem;
+    font-weight: 800;
+    margin: 0 0 12px 0;
+    background: linear-gradient(90deg, var(--accent), var(--blue));
+    -webkit-background-clip: text;
+    background-clip: text;
+    -webkit-text-fill-color: transparent;
+    letter-spacing: -0.02em;
+}
+
+.commands-header p {
+    color: var(--subtext);
+    font-size: 1rem;
+    margin-bottom: 24px;
+    line-height: 1.6;
+}
+
+.commands-filters {
+    display: flex;
+    flex-wrap: wrap;
+    align-items: center;
+    gap: 20px;
+}
+
+.search-box {
+    position: relative;
+    display: flex;
+    align-items: center;
+    flex: 1;
+    min-width: 250px;
+    max-width: 400px;
+}
+
+.search-icon {
+    position: absolute;
+    left: 14px;
+    color: var(--muted);
+    font-size: 0.9rem;
+}
+
+.search-box input {
+    width: 100%;
+    padding: 10px 14px 10px 42px;
+    background: var(--input-bg);
+    border: 1px solid var(--border);
+    border-radius: 12px;
+    color: var(--text);
+    font-family: inherit;
+    font-size: 0.9rem;
+    outline: none;
+    transition: all 0.2s;
+}
+
+.search-box input:focus {
+    border-color: var(--accent);
+    box-shadow: 0 0 0 3px var(--accent-15);
+}
+
+.category-filters {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 8px;
+}
+
+.cat-btn {
+    padding: 7px 14px;
+    background: var(--card-bg);
+    border: 1px solid var(--border);
+    border-radius: 20px;
+    color: var(--subtext);
+    cursor: pointer;
+    font-size: 0.8rem;
+    font-weight: 500;
+    font-family: inherit;
+    transition: all 0.2s;
+}
+
+.cat-btn:hover {
+    background: var(--hover-bg);
+    border-color: var(--accent-40);
+    color: var(--text);
+}
+
+.cat-btn.active {
+    background: var(--accent);
+    color: white;
+    border-color: var(--accent);
+    box-shadow: 0 4px 12px var(--accent-40);
+}
+
+.commands-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fill, minmax(320px, 1fr));
+    gap: 24px;
+    margin-top: 32px;
+}
+
+.command-card {
+    background: var(--card-bg);
+    border: 1px solid var(--border);
+    border-radius: 16px;
+    padding: 24px;
+    display: flex;
+    flex-direction: column;
+    gap: 16px;
+    transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+    position: relative;
+    overflow: hidden;
+}
+
+.command-card:hover {
+    transform: translateY(-6px);
+    border-color: var(--accent-40);
+    box-shadow: 0 12px 28px rgba(0, 0, 0, 0.15);
+}
+
+.command-card::after {
+    content: '';
+    position: absolute;
+    top: 0;
+    left: 0;
+    width: 4px;
+    height: 100%;
+    background: var(--accent);
+    opacity: 0;
+    transition: opacity 0.2s;
+}
+
+.command-card:hover::after {
+    opacity: 1;
+}
+
+.cmd-card-header {
+    display: flex;
+    justify-content: space-between;
+    align-items: flex-start;
+    gap: 12px;
+}
+
+.cmd-title {
+    font-size: 1.2rem;
+    font-weight: 700;
+    color: var(--peach);
+    margin: 0;
+    font-family: 'JetBrains Mono', monospace;
+}
+
+.cmd-category {
+    font-size: 0.65rem;
+    padding: 2px 8px;
+    background: var(--accent-15);
+    color: var(--accent);
+    border-radius: 20px;
+    text-transform: uppercase;
+    font-weight: 700;
+    letter-spacing: 0.05em;
+    font-family: 'JetBrains Mono', monospace;
+}
+
+.cmd-desc {
+    font-size: 0.88rem;
+    color: var(--subtext);
+    line-height: 1.6;
+    margin: 0;
+}
+
+.cmd-section {
+    display: flex;
+    flex-direction: column;
+    gap: 8px;
+}
+
+.cmd-section-title {
+    font-size: 0.7rem;
+    font-weight: 700;
+    text-transform: uppercase;
+    color: var(--muted);
+    letter-spacing: 0.06em;
+}
+
+.cmd-code {
+    font-family: 'JetBrains Mono', monospace;
+    font-size: 0.82rem;
+    padding: 10px 14px;
+    background: var(--input-bg);
+    border: 1px solid var(--border);
+    border-radius: 8px;
+    color: var(--sky);
+    word-break: break-all;
+    line-height: 1.5;
+}
+
+.cmd-code.highlight {
+    color: var(--green);
+}
+
+.example-code-box {
+    margin-top: auto;
+    display: flex;
+    flex-direction: column;
+    gap: 12px;
+}
+
+.example-code-box .cmd-code {
+    border-color: var(--accent-15);
+}
+
+.try-btn {
+    align-self: flex-end;
+    padding: 6px 16px;
+    background: var(--accent);
+    color: white;
+    border: none;
+    border-radius: 8px;
+    font-size: 0.75rem;
+    font-weight: 700;
+    cursor: pointer;
+    transition: all 0.2s;
+    font-family: inherit;
+    box-shadow: 0 2px 8px var(--accent-15);
+}
+
+.try-btn:hover {
+    transform: scale(1.05);
+    box-shadow: 0 4px 12px var(--accent-40);
+}
+
+.commands-empty {
+    grid-column: 1 / -1;
+    text-align: center;
+    padding: 64px;
+    color: var(--muted);
+    font-style: italic;
+    background: var(--card-bg);
+    border-radius: 16px;
+    border: 1px dashed var(--border);
+}
+
+@keyframes fadeIn {
+    from {
+        opacity: 0;
+        transform: translateY(10px);
+    }
+
+    to {
+        opacity: 1;
+        transform: translateY(0);
+    }
+}
+
+/* ─── Agrega estos estilos al final de tu SqlCommandsReference.css ─── */
+
+/* Fila de filtro de motor */
+.engine-filters {
+    display: flex;
+    flex-wrap: wrap;
+    align-items: center;
+    gap: 6px;
+    margin-top: 8px;
+}
+
+.filter-label {
+    font-size: 13px;
+    font-weight: 600;
+    color: #666;
+    margin-right: 4px;
+}
+
+/* Botones de motor: igual estilo base que cat-btn */
+.engine-btn {
+    padding: 5px 12px;
+    border-radius: 20px;
+    border: 1.5px solid #ddd;
+    background: transparent;
+    font-size: 12px;
+    font-weight: 500;
+    cursor: pointer;
+    transition: all 0.18s ease;
+    color: #555;
+}
+
+.engine-btn:hover {
+    border-color: #aaa;
+    background: #f5f5f5;
+}
+
+.engine-btn.active {
+    /* El color se aplica via inline style por motor.
+       Para "Todos" activo usamos el estilo genérico: */
+    background: #222;
+    color: #fff;
+    border-color: #222;
+}
+
+/* Contador de resultados + badge de motor activo */
+.commands-count {
+    display: flex;
+    align-items: center;
+    gap: 8px;
+    font-size: 13px;
+    color: #888;
+    margin: 4px 0 12px 0;
+}
+
+.engine-badge {
+    font-size: 11px;
+    font-weight: 600;
+    padding: 2px 10px;
+    border-radius: 12px;
+    border: 1.5px solid;
+}
+
+/* Card con variantes: borde izquierdo sutil */
+.command-card.has-variants {
+    border-left: 3px solid #e0e0e0;
+}
+
+/* Fila de badges en el header de la card */
+.cmd-badges {
+    display: flex;
+    align-items: center;
+    gap: 6px;
+    flex-wrap: wrap;
+}
+
+.variants-badge {
+    font-size: 11px;
+    font-weight: 600;
+    padding: 2px 8px;
+    border-radius: 10px;
+    background: #f3e5f5;
+    color: #6a1b9a;
+    border: 1px solid #ce93d8;
+}
+
+/* Sección de variantes */
+.cmd-variants-section {
+    margin-top: 12px;
+    border-top: 1px dashed #e0e0e0;
+    padding-top: 10px;
+}
+
+.variants-toggle {
+    display: flex;
+    align-items: center;
+    gap: 6px;
+    background: none;
+    border: none;
+    font-size: 13px;
+    font-weight: 600;
+    color: #555;
+    cursor: pointer;
+    padding: 4px 0;
+    transition: color 0.15s;
+}
+
+.variants-toggle:hover {
+    color: #222;
+}
+
+.variants-toggle span {
+    font-size: 10px;
+}
+
+/* Lista de variantes */
+.variants-list {
+    margin-top: 10px;
+    display: flex;
+    flex-direction: column;
+    gap: 14px;
+}
+
+/* Bloque individual de variante */
+.variant-block {
+    background: var(--card-bg);
+    border: 1px solid var(--border);
+    border-radius: 8px;
+    padding: 12px 14px;
+}
+
+/* Fila de tags de motores */
+.variant-engines {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 6px;
+    margin-bottom: 10px;
+}
+
+.engine-tag {
+    font-size: 11px;
+    font-weight: 700;
+    padding: 2px 10px;
+    border-radius: 12px;
+    border: 1.5px solid;
+    letter-spacing: 0.02em;
+}
+
+/* Nota aclaratoria */
+.variant-note {
+    display: flex;
+    gap: 6px;
+    align-items: flex-start;
+    font-size: 12px;
+    color: white;
+    background: var(--card-bg);
+    border: 1px solid #fff176;
+    border-radius: 6px;
+    padding: 8px 10px;
+    margin-top: 8px;
+    line-height: 1.5;
+}
+
+.note-icon {
+    flex-shrink: 0;
+    font-size: 14px;
+}

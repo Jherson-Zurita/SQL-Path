@@ -1,0 +1,192 @@
+.db-draw-container {
+  display: flex;
+  flex-direction: column;
+  height: 100%;
+  padding: 16px;
+  gap: 16px;
+  flex: 1;
+}
+
+.db-draw-header {
+  display: flex;
+  justify-content: space-between;
+  align-items: flex-start;
+  flex-wrap: wrap;
+  border-bottom: 2px dashed var(--border);
+  padding-bottom: 16px;
+}
+
+.db-draw-title h2 {
+  margin: 0;
+  font-size: 1.5rem;
+  background: linear-gradient(90deg, var(--accent), var(--blue));
+  -webkit-background-clip: text;
+  background-clip: text;
+  -webkit-text-fill-color: transparent;
+}
+
+.db-draw-title p {
+  color: var(--muted);
+  margin: 6px 0 0;
+  font-size: 0.9rem;
+}
+
+.db-draw-select {
+  padding: 8px 16px;
+  border-radius: 8px;
+  border: 1px solid var(--border);
+  background: var(--card-bg);
+  color: var(--text);
+  font-size: 0.9rem;
+  font-family: inherit;
+  outline: none;
+  cursor: pointer;
+  transition: all 0.2s;
+}
+
+.db-draw-select:hover,
+.db-draw-select:focus {
+  border-color: var(--accent);
+}
+
+.db-draw-canvas {
+  position: relative;
+  flex: 1;
+  background: var(--editor-bg);
+  border-radius: 12px;
+  border: 1px solid var(--border);
+  overflow: hidden;
+  box-shadow: inset 0 0 40px rgba(0, 0, 0, 0.2);
+  user-select: none;
+}
+
+/* Rejilla de fondo como en dbdiagram */
+.db-draw-canvas::before {
+  content: '';
+  position: absolute;
+  top: 0;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  background-image:
+    linear-gradient(rgba(255, 255, 255, 0.05) 1px, transparent 1px),
+    linear-gradient(90deg, rgba(255, 255, 255, 0.05) 1px, transparent 1px);
+  background-size: 20px 20px;
+  pointer-events: none;
+}
+
+.db-draw-edges {
+  position: absolute;
+  top: 0;
+  left: 0;
+  pointer-events: none;
+  z-index: 10;
+}
+
+.db-draw-empty {
+  position: absolute;
+  top: 50%;
+  left: 50%;
+  transform: translate(-50%, -50%);
+  color: var(--muted);
+  font-size: 1.1rem;
+}
+
+.db-table-node {
+  position: absolute;
+  top: 0;
+  left: 0;
+  width: 250px;
+  background: var(--card-bg);
+  border: 1px solid rgba(137, 220, 235, 0.3);
+  border-radius: 8px;
+  box-shadow: 0 4px 15px rgba(0, 0, 0, 0.3);
+  cursor: grab;
+  z-index: 20;
+  transition: box-shadow 0.2s, transform 0s;
+  overflow: hidden;
+}
+
+.db-table-node:hover {
+  border-color: var(--accent);
+}
+
+.db-table-node.dragging {
+  cursor: grabbing;
+  z-index: 100 !important;
+  box-shadow: 0 10px 30px rgba(0, 0, 0, 0.6);
+  border-color: var(--pink);
+  opacity: 0.9;
+}
+
+.db-table-header {
+  padding: 10px 14px;
+  background: rgba(137, 220, 235, 0.1);
+  border-bottom: 1px solid rgba(137, 220, 235, 0.3);
+  font-family: 'JetBrains Mono', monospace;
+  font-weight: 700;
+  font-size: 0.95rem;
+  color: var(--blue);
+  text-transform: capitalize;
+}
+
+.db-table-cols {
+  padding: 6px 0;
+  background: var(--editor-bg);
+  display: flex;
+  flex-direction: column;
+}
+
+.db-table-col {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  padding: 4px 14px;
+  font-size: 0.82rem;
+  font-family: 'JetBrains Mono', monospace;
+  border-bottom: 1px solid rgba(255, 255, 255, 0.02);
+}
+
+.db-table-col:last-child {
+  border-bottom: none;
+}
+
+.col-name {
+  color: var(--text);
+  display: flex;
+  align-items: center;
+  gap: 6px;
+}
+
+.key-icon {
+  font-size: 0.8rem;
+  color: var(--yellow);
+}
+
+.key-icon.fk-icon {
+  filter: hue-rotate(-60deg) saturate(1.5);
+}
+
+.col-type {
+  color: var(--muted);
+  font-size: 0.72rem;
+  text-transform: uppercase;
+}
+
+.db-table-node.dragging .db-table-header {
+  background: rgba(243, 139, 168, 0.15);
+  border-bottom-color: rgba(243, 139, 168, 0.4);
+  color: var(--pink);
+}
+
+.db-draw-reset {
+  padding: 8px 16px;
+  border-radius: 8px;
+  border: 1px solid var(--border);
+  background: var(--card-bg);
+  color: var(--text);
+  font-size: 0.9rem;
+  cursor: pointer;
+  transition: all 0.2s;
+
+}
