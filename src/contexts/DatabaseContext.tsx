@@ -74,17 +74,17 @@ export function DatabaseProvider({ children }: { children: ReactNode }) {
   const refreshTables = useCallback(() => {
     const db = getActiveDB()
     if (!db) { setActiveTables([]); return }
-    
+
     try {
       const res = db.exec("SELECT name FROM sqlite_master WHERE type='table' AND name NOT LIKE 'sqlite_%' ORDER BY name")
       if (!res.length) { setActiveTables([]); return }
-      
+
       const tableNames = res[0].values.map((r: any) => r[0] as string)
       const infos: TableInfo[] = tableNames.map((name: string) => {
         const cols = db.exec(`PRAGMA table_info("${name}")`)
         const count = db.exec(`SELECT COUNT(*) FROM "${name}"`)
         const fks = db.exec(`PRAGMA foreign_key_list("${name}")`)
-        
+
         return {
           name,
           columns: cols.length ? cols[0].values.map((c: any) => ({
@@ -102,14 +102,14 @@ export function DatabaseProvider({ children }: { children: ReactNode }) {
         }
       })
       setActiveTables(infos)
-      
+
       // Update metadata for all databases
       setDatabasesMetadata(dbInstances.current.map(inst => {
         let count = 0
         try {
           const r = inst.db.exec("SELECT count(*) FROM sqlite_master WHERE type='table' AND name NOT LIKE 'sqlite_%'")
           count = r.length ? (r[0].values[0][0] as number) : 0
-        } catch {}
+        } catch { }
         return { id: inst.id, name: inst.name, tableCount: count, isSample: inst.isSample }
       }))
     } catch {
@@ -120,11 +120,11 @@ export function DatabaseProvider({ children }: { children: ReactNode }) {
   useEffect(() => {
     let cancelled = false
     initSqlJs({
-      locateFile: () => `public/sql-wasm.wasm`,
+      locateFile: () => `sql-wasm.wasm`,
     }).then((sqlInstance: any) => {
       if (cancelled) return
       setSQL(sqlInstance)
-      
+
       // Create initial sample database
       const db = new sqlInstance.Database()
       db.run(SAMPLE_DB_SQL)
@@ -171,11 +171,11 @@ export function DatabaseProvider({ children }: { children: ReactNode }) {
 
   const importFullDatabase = async (file: File): Promise<{ success: boolean; error?: string }> => {
     if (!SQL) return { success: false, error: 'SQL engine not ready' }
-    
+
     return new Promise((resolve) => {
       const isSqlFile = file.name.endsWith('.sql') || file.name.endsWith('.txt')
       const reader = new FileReader()
-      
+
       reader.onload = (e) => {
         try {
           let db: Database
@@ -187,7 +187,7 @@ export function DatabaseProvider({ children }: { children: ReactNode }) {
             const u8 = new Uint8Array(e.target?.result as ArrayBuffer)
             db = new SQL.Database(u8)
           }
-          
+
           const id = crypto.randomUUID()
           dbInstances.current.push({ id, name: file.name, db })
           setActiveDatabaseId(id)

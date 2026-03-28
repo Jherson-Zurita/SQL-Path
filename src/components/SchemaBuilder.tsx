@@ -8,7 +8,7 @@ import type { QueryResult } from '../contexts/DatabaseContext'
 import './SchemaBuilder.css'
 
 const sqlTheme = EditorView.theme({
-  '&': { background: '#080814', color: '#cdd6f4', fontSize: '13px', fontFamily: "'JetBrains Mono', monospace" },
+  '&': { background: '#080814', color: '#cdd6f4', fontSize: '13px', fontFamily: "'JetBrains Mono', monospace", height: '100%' },
   '.cm-content': { padding: '12px', caretColor: '#cba6f7', lineHeight: '1.7' },
   '.cm-focused': { outline: 'none' },
   '.cm-cursor': { borderLeftColor: '#cba6f7', borderLeftWidth: '2px' },
@@ -20,7 +20,14 @@ const sqlTheme = EditorView.theme({
   '.tok-comment': { color: '#585b70', fontStyle: 'italic' },
   '.tok-operator': { color: '#89dceb' },
   '.tok-name': { color: '#cdd6f4' },
+  '.cm-scroller': { overflow: 'auto' }
 }, { dark: true })
+
+interface QueryTab {
+  id: string;
+  name: string;
+  content: string;
+}
 
 export default function SchemaBuilder() {
   const { 
@@ -36,12 +43,38 @@ export default function SchemaBuilder() {
   } = useSqlDatabase()
   const [activeTable, setActiveTable] = useState<string | null>(null)
   const [tableData, setTableData] = useState<QueryResult | null>(null)
-  const [sqlCode, setSqlCode] = useState('')
   const [feedback, setFeedback] = useState<{ ok: boolean; msg: string } | null>(null)
-  const [quickAdd, setQuickAdd] = useState({ tableName: '', columns: '' })
   const [newDbName, setNewDbName] = useState('')
 
+  const [tabs, setTabs] = useState<QueryTab[]>([
+    { id: '1', name: 'query_1.sql', content: '-- Escribe tus consultas SQL aquí...\nSELECT sqlite_version();' }
+  ])
+  const [activeTabId, setActiveTabId] = useState('1')
+  const [tabCounter, setTabCounter] = useState(2)
+
   const activeDatabase = databases.find(db => db.id === activeDatabaseId)
+  const activeTab = tabs.find(t => t.id === activeTabId) || tabs[0]
+
+  const updateTabContent = (val: string) => {
+    setTabs(tabs.map(t => t.id === activeTabId ? { ...t, content: val } : t))
+  }
+
+  const addTab = () => {
+    const newTab = { id: String(tabCounter), name: `query_${tabCounter}.sql`, content: '' }
+    setTabs([...tabs, newTab])
+    setActiveTabId(newTab.id)
+    setTabCounter(prev => prev + 1)
+  }
+
+  const removeTab = (e: React.MouseEvent, idToRemove: string) => {
+    e.stopPropagation()
+    if (tabs.length === 1) return // Keep at least one tab
+    const newTabs = tabs.filter(t => t.id !== idToRemove)
+    if (activeTabId === idToRemove) {
+      setActiveTabId(newTabs[newTabs.length - 1].id)
+    }
+    setTabs(newTabs)
+  }
 
   const viewTable = (name: string) => {
     setActiveTable(name)
@@ -50,6 +83,7 @@ export default function SchemaBuilder() {
   }
 
   const runSQL = () => {
+    const sqlCode = activeTab.content;
     if (!sqlCode.trim()) return
     const res = executeQuery(sqlCode)
     
@@ -73,18 +107,8 @@ export default function SchemaBuilder() {
     }
   }
 
-  const handleQuickCreate = () => {
-    if (!quickAdd.tableName.trim() || !quickAdd.columns.trim()) return
-    const cols = quickAdd.columns.split(',').map(c => {
-      const parts = c.trim().split(/\s+/)
-      return `  ${parts[0]} ${parts[1] || 'TEXT'}${parts.slice(2).join(' ') ? ' ' + parts.slice(2).join(' ') : ''}`
-    }).join(',\n')
-    const createSQL = `CREATE TABLE ${quickAdd.tableName} (\n  id INTEGER PRIMARY KEY,\n${cols}\n);`
-    setSqlCode(createSQL)
-    setQuickAdd({ tableName: '', columns: '' })
-  }
-
   const dropTable = (name: string) => {
+    if (!confirm(`¿Estás seguro de que deseas eliminar la tabla "${name}"?`)) return;
     const res = executeManyStatements(`DROP TABLE IF EXISTS "${name}"`)
     setFeedback({ ok: res.success, msg: res.success ? `🗑️ Tabla "${name}" eliminada` : `❌ ${res.error}` })
     if (activeTable === name) { setActiveTable(null); setTableData(null) }
@@ -139,7 +163,7 @@ export default function SchemaBuilder() {
           <span>🗄️ Tablas {activeDatabase && <small>({activeDatabase.name})</small>}</span>
           <span className="sb-count">{tables.length}</span>
         </div>
-        <div className="sb-table-list">
+        <div className="sb-table-list sb-table-list-extended">
           {tables.map((t: any) => (
             <div key={t.name} className={`sb-table-item ${activeTable === t.name ? 'sb-table-active' : ''}`}>
               <button className="sb-table-btn" onClick={() => viewTable(t.name)}>
@@ -152,61 +176,51 @@ export default function SchemaBuilder() {
               <button className="sb-drop-btn" onClick={() => dropTable(t.name)} title="Eliminar tabla">×</button>
             </div>
           ))}
-        </div>
-
-
-        {/* Quick create */}
-        <div className="sb-quick">
-          <div className="sb-quick-title">⚡ Crear Tabla Rápida</div>
-          <input
-            className="sb-input"
-            placeholder="Nombre de tabla"
-            value={quickAdd.tableName}
-            onChange={e => setQuickAdd(q => ({ ...q, tableName: e.target.value }))}
-          />
-          <input
-            className="sb-input"
-            placeholder="col1 TEXT, col2 INT, ..."
-            value={quickAdd.columns}
-            onChange={e => setQuickAdd(q => ({ ...q, columns: e.target.value }))}
-          />
-          <button className="sb-quick-btn" onClick={handleQuickCreate}>Generar SQL</button>
+          {tables.length === 0 && (
+            <div className="sb-table-empty">No hay tablas. Crea una en el editor.</div>
+          )}
         </div>
       </div>
 
       <div className="sb-main">
-        {/* SQL Editor */}
+        {/* Playground Editor */}
         <div className="sb-editor-section">
-          <div className="sb-editor-header">
-            <span>✏️ Editor SQL</span>
-            <div className="sb-editor-btns">
-              <button className="sb-template-btn" onClick={() => setSqlCode("CREATE TABLE nueva_tabla (\n  id INTEGER PRIMARY KEY,\n  nombre TEXT NOT NULL,\n  valor REAL DEFAULT 0\n);")}>
-                📝 Plantilla CREATE
-              </button>
-              <button className="sb-template-btn" onClick={() => setSqlCode(activeTable ? `INSERT INTO ${activeTable} (col1, col2) VALUES ('valor1', 'valor2');` : "INSERT INTO tabla (col1, col2) VALUES ('v1', 'v2');")}>
-                ➕ Plantilla INSERT
-              </button>
-              <button className="sb-template-btn" onClick={() => setSqlCode(activeTable ? ` SELECT * FROM ${activeTable};` : "SELECT * FROM tabla;")}>
-                🔍 Plantlla SELECT
-              </button>
-              <button className="sb-template-btn" onClick={() => setSqlCode(activeTable ? ` UPDATE ${activeTable} SET col1 = 'valor1' WHERE col2 = 'valor2';` : "UPDATE tabla SET col1 = 'v1' WHERE col2 = 'v2';")}>
-                ✏️ Plantlla UPDATE
-              </button>
-              <button className="sb-template-btn" onClick={() => setSqlCode(activeTable ? ` DELETE FROM ${activeTable} WHERE col1 = 'valor1';` : "DELETE FROM tabla WHERE col1 = 'v1';")}>
-                🗑️ Plantlla DELETE
-              </button>
-              <button className="sb-run-btn" onClick={runSQL}>▶ Ejecutar</button>
+          <div className="sb-tabs-header">
+            <div className="sb-tabs-list">
+              {tabs.map(tab => (
+                <div 
+                  key={tab.id} 
+                  className={`sb-tab ${tab.id === activeTabId ? 'sb-tab-active' : ''}`}
+                  onClick={() => setActiveTabId(tab.id)}
+                >
+                  <span className="sb-tab-icon">📄</span>
+                  <span className="sb-tab-name">{tab.name}</span>
+                  {tabs.length > 1 && (
+                    <button className="sb-tab-close" onClick={(e) => removeTab(e, tab.id)}>×</button>
+                  )}
+                </div>
+              ))}
+              <button className="sb-tab-add" onClick={addTab} title="Nuevo archivo de consulta">+</button>
+            </div>
+            
+            <div className="sb-editor-actions">
+               <button className="sb-run-btn" onClick={runSQL}>
+                 <span className="sb-play-icon">▶</span> Ejecutar
+               </button>
             </div>
           </div>
-          <CodeMirror
-            value={sqlCode}
-            height="150px"
-            extensions={[sql()]}
-            theme={sqlTheme}
-            onChange={setSqlCode}
-            basicSetup={{ lineNumbers: true, highlightActiveLine: true, autocompletion: true, bracketMatching: true }}
-            placeholder="-- Escribe CREATE TABLE, INSERT, ALTER TABLE..."
-          />
+          
+          <div className="sb-codemirror-wrapper">
+            <CodeMirror
+              value={activeTab.content}
+              height="200px"
+              extensions={[sql()]}
+              theme={sqlTheme}
+              onChange={updateTabContent}
+              basicSetup={{ lineNumbers: true, highlightActiveLine: true, autocompletion: true, bracketMatching: true }}
+              placeholder="-- Escribe tus consultas SQL aquí..."
+            />
+          </div>
         </div>
 
         {feedback && (
@@ -215,33 +229,32 @@ export default function SchemaBuilder() {
           </div>
         )}
 
-        {/* Table View */}
-        {(activeTable || tableData) && (
-          <div className="sb-table-view">
-            {activeTable && (
-              <div className="sb-tv-header">
-                <h3>📋 {activeTable}</h3>
-                <div className="sb-tv-schema">
-                  {tables.find(t => t.name === activeTable)?.columns.map(c => (
-                    <span key={c.name} className={`sb-col-tag ${c.pk ? 'sb-col-pk' : ''}`}>
-                      {c.pk && '🔑 '}{c.name} <span className="sb-col-type">{c.type}</span>
-                    </span>
-                  ))}
+        {/* Results View */}
+        <div className="sb-results-area">
+          {(activeTable || tableData) ? (
+            <div className="sb-table-view">
+              {activeTable && (
+                <div className="sb-tv-header">
+                  <h3>📋 {activeTable}</h3>
+                  <div className="sb-tv-schema">
+                    {tables.find((t: any) => t.name === activeTable)?.columns.map((c: any) => (
+                      <span key={c.name} className={`sb-col-tag ${c.pk ? 'sb-col-pk' : ''}`}>
+                        {c.pk && '🔑 '}{c.name} <span className="sb-col-type">{c.type}</span>
+                      </span>
+                    ))}
+                  </div>
                 </div>
-              </div>
-            )}
-            <ResultsTable result={tableData} title={activeTable ? `Datos de ${activeTable}` : 'Resultados de consulta'} />
-          </div>
-        )}
-
-        {!activeTable && !tableData && (
-          <div className="sb-empty">
-            <div className="sb-empty-icon">🏗️</div>
-            <p>Selecciona una tabla del panel izquierdo o crea una nueva usando el editor SQL.</p>
-          </div>
-        )}
+              )}
+              <ResultsTable result={tableData} title={activeTable ? `Datos de ${activeTable}` : 'Resultados de consulta'} />
+            </div>
+          ) : (
+            <div className="sb-empty">
+              <div className="sb-empty-icon">🛝</div>
+              <p>El Playground de Base de Datos está listo.<br/>Escribe una consulta arriba y presiona Ejecutar, o selecciona una tabla para explorarla.</p>
+            </div>
+          )}
+        </div>
       </div>
     </div>
-
   )
 }
