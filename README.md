@@ -1,6 +1,6 @@
 <div align="center">
   <img src="public/icon.svg" alt="SQL Path Logo" width="120" />
-  <h1>SQL Path (SQL-Venn)</h1>
+  <h1>SQL Path</h1>
   <p>🚀 <i>Una plataforma web interactiva y visual para aprender, explorar y dominar bases de datos SQL directamente en tu navegador.</i></p>
 </div>
 
@@ -41,45 +41,40 @@ La plataforma está dividida en diferentes módulos accesibles desde la barra la
 
 ### ⌨️ Editor SQL (Visualizador)
 El área principal y más visual, especialmente útil para comprender intuitivamente el flujo de los datos y cómo interaccionan diferentes consultas a través de interfaces como diagramas de Venn.
+<img width="1366" height="614" alt="Image" src="https://github.com/user-attachments/assets/46bd221e-0362-480c-bf8e-a7f277a9791e" />
 
-*(📷 Inserta aquí tu imagen del tab de Editor SQL)*
-`<!-- ![Tab Editor](ruta/a/tu/imagen-editor.png) -->`
 
 ### 🗄️ Schema (El Playground)
 Un entorno profesional para la gestión de bases de datos. Cuenta con un **sistema de pestañas múltiples** (para trabajar en varias consultas a la vez), gestión de tablas a un simple clic y resultados de datos instantáneos. Es literalmente tu banco de pruebas de SQL.
 
-*(📷 Inserta aquí tu imagen del tab de Schema)*
-`<!-- ![Tab Schema](ruta/a/tu/imagen-schema.png) -->`
+<img width="1366" height="617" alt="Image" src="https://github.com/user-attachments/assets/1a218d8f-e531-43cb-ad99-a275ca5911f9" />
 
 ### 📋 Comandos
 Una completa hoja de trucos (cheatsheet) integrada. Encontrarás referencia rápida sobre cómo estructurar consultas comunes, útiles para cuando estás en pleno diseño y necesitas recordar la sintaxis exacta de un comando.
 
-*(📷 Inserta aquí tu imagen del tab de Comandos)*
-`<!-- ![Tab Comandos](ruta/a/tu/imagen-comandos.png) -->`
+<img width="1366" height="616" alt="Image" src="https://github.com/user-attachments/assets/d9b80b85-60ac-426c-8f0b-6711fb713c53" />
 
 ### 📐 DbDraw
 Visualizador gráfico de esquemas de bases de datos para entender fácilmente las relaciones (Entidad-Relación) entre múltiples tablas de un vistazo, de gran ayuda para bases de datos complejas.
 
-*(📷 Inserta aquí tu imagen del tab de DbDraw)*
-`<!-- ![Tab DbDraw](ruta/a/tu/imagen-dbdraw.png) -->`
+<img width="1365" height="617" alt="Image" src="https://github.com/user-attachments/assets/a4379fd1-d2a1-46e1-b836-402fb2d8b571" />
 
 ### 🔒 Seguridad
 Módulo educativo diseñado para enseñar los aspectos más importantes de administración de bases de datos: gestión de **Roles**, **Privilegios**, características **ACID** y control de Transacciones.
 
-*(📷 Inserta aquí tu imagen del tab de Seguridad)*
-`<!-- ![Tab Seguridad](ruta/a/tu/imagen-seguridad.png) -->`
+<img width="1366" height="616" alt="Image" src="https://github.com/user-attachments/assets/92cd1a5d-2481-4918-8d2e-00d7f27df212" />
 
 ### 🎯 Desafíos
 Un entorno "Aprender Haciendo". Aquí encontrarás retos SQL dinámicos con seguimiento de progreso, perfectos para poner a prueba tus conocimientos escribiendo consultas reales para superar cada nivel.
 
-*(📷 Inserta aquí tu imagen del tab de Desafios)*
-`<!-- ![Tab Desafios](ruta/a/tu/imagen-desafios.png) -->`
+<img width="1364" height="615" alt="Image" src="https://github.com/user-attachments/assets/f31080af-b2c1-4ef6-a9b2-fa3cf38d3347" />
 
 ### 📂 e 📤 Importar y Exportar
 Gestiona tus proyectos libremente. Puedes cargar cualquier archivo de base de datos `.sqlite` existente para auditarlo en nuestra app, y de igual forma, descargar todo tu progreso en un archivo para llevarlo donde quieras.
 
-*(📷 Inserta aquí tu imagen de Importar/Exportar)*
-`<!-- ![Tabs Import/Export](ruta/a/tu/imagen-import-export.png) -->`
+<img width="1365" height="617" alt="Image" src="https://github.com/user-attachments/assets/07a01c52-a917-429f-8aa7-6ac03dd3e4ec" />
+
+<img width="1366" height="617" alt="Image" src="https://github.com/user-attachments/assets/25894e81-3c57-4e6b-8a5f-3c7b0bf8a979" />
 
 ---
 
